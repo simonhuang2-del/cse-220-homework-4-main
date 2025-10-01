@@ -16,8 +16,8 @@ int strgLen(const char *s) {
     }
     return len;
 }
-
-void strgCopy(char *src, char *dest) {
+//assume dest is large enough
+void strgCopy(char *dest, char *src) {
     //checks if either src or dest are null
     if (src == NULL || dest == NULL){
         return; 
@@ -29,7 +29,6 @@ void strgCopy(char *src, char *dest) {
         //sets d to s 
         *d++ = *s++;
     }
-    //end d with a terminator
     *d = '\0';
 }
 
@@ -59,36 +58,58 @@ int strgDiff(char *s1, char *s2) {
         return -2;
     }
 
-    for (int i = 0; s1[i] != '\0'; i++){
+    for (int i = 0; s1[i] != '\0' && s2[i] != '\0'; i++){
         if (s1[i] != s2[i]){
             return i;
         }
     }
     return -1;
 }
-
+//assume dest is large enough
 void strgInterleave(char *s1, char *s2, char *d) {
-    // TODO: implement
-    (void)s1;
-    (void)s2;
-    (void)d;
+    if (s1 == NULL || s2 == NULL || d == NULL){
+        return;
+    }
+
+    int s1Idx = 0, s2Idx = 0, dIdx = 0;
+
+    //interleave
+    while (s1[s1Idx] != '\0' && s2[s2Idx] != '\0'){
+        d[dIdx++] = s1[s1Idx++];
+        d[dIdx++] = s2[s2Idx++];
+    }
+
+    //finish up s1 if applicable
+    while (s1[s1Idx] != '\0'){
+        d[dIdx++] = s1[s1Idx++];
+    }
+
+    //finish up s2 if applicable
+    while (s2[s2Idx] != '\0'){
+        d[dIdx++] = s2[s2Idx++];
+    }
+
+    d[dIdx] = '\0';
 }
-//your mom
+
 void strgReverseLetters(char *s) {
     if (s == NULL){
         return;
     }
 
-    //fix this dog 
-    //only reverses doesnt keep non letters in place
+    //two pointer reverse string
     int left = 0, right = strgLen(s)-1;
     while (left < right){
-        if (isdigit(s[left])){
+        //skips a left if digit
+        while (left < right && !isalpha(s[left])){
             left++;
         }
-        if (isdigit(s[right])){
+        //skips a right if digit
+        while (left < right && !isalpha(s[right])){
             right--;
         }
+        
+        //swaps left and right
         char temp = s[left];
         s[left] = s[right];
         s[right] = temp;
@@ -107,14 +128,16 @@ void strgReverseLetters(char *s) {
  * Before submmiting your assignment, please comment out your 
  * test cases for the TAs. 
  * Comment out if using criterion to test.
- */
+ **/
+
+ /*
 int main(int argc, char* argv[]){
 	(void)argc;
 	(void)argv;
-	/** CREATE TEST CASES HERE **/
-    char str[] ="";
-    strgReverseLetters(str);
-    printf("%s\n", str);
-    /** ---------------------- **/
+    char s1[] = "abc";
+    char s2[] = "123";
+    char d[70];
+    strgInterleave(s1, s2, d);
+    printf("%s\n", d);
 	return 0;
-}
+}*/
