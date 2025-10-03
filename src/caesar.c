@@ -44,7 +44,7 @@ int encryptCaesar(const char *plaintext, char *ciphertext, int key) {
     }
 
     //add eom marker
-int encodedCount = i - skipped;
+    int encodedCount = i - skipped;
     const char *eom = "__EOM__";
     while (*eom != '\0')    {
         ciphertext[i++] = *eom++;
@@ -85,9 +85,11 @@ int decryptCaesar(const char *ciphertext, char *plaintext, int key) {
     }
 
     int i = 0;
+    int written = 0;
     int skipped = 0;
     for (i = 0; i < pos - ciphertext; i++){
         char c = ciphertext[i];
+        char toWrite;
 
         if (c == '_' && strncmp(&ciphertext[i], "__EOM__", 7) == 0){
             break;
@@ -95,20 +97,26 @@ int decryptCaesar(const char *ciphertext, char *plaintext, int key) {
 
         if (isupper(c)){ //uppercase
             int shift = (key + i) % 26;
-            plaintext[i] = ((c - 'A' - shift + 26) % 26) + 'A';
+            toWrite = ((c - 'A' - shift + 26) % 26) + 'A';
         }else if (islower(c)){ //lowercase
             int shift = (key + i) % 26;
-            plaintext[i] = ((c - 'a' - shift + 26) % 26) + 'a';
+            toWrite = ((c - 'a' - shift + 26) % 26) + 'a';
         }else if (isdigit(c)){ //digit
             int shift = (key + 2*i) % 10;
-            plaintext[i] = ((c - '0' - shift + 10) % 10) + '0';
+            toWrite = ((c - '0' - shift + 10) % 10) + '0';
         }else{ //non-ascii
-            plaintext[i] = c;
+            toWrite = c;
             skipped++;
+        }
+
+        if (cap == 0 || written < cap){
+            plaintext[written++] = toWrite;
         }
     }
 
-    plaintext[i] = '\0';
+    
+    
+    plaintext[written] = '\0';
     return i - skipped;
 }
 

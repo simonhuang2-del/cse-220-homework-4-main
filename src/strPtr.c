@@ -15,7 +15,7 @@ int strgLen(const char *s) {
         s++;
     }
     return len;
-}
+}   
 //assume dest is large enough
 void strgCopy(char *dest, char *src) {
     //checks if either src or dest are null
@@ -57,11 +57,12 @@ int strgDiff(char *s1, char *s2) {
     if (s1 == NULL || s2 == NULL){
         return -2;
     }
-
-    for (int i = 0; s1[i] != '\0' && s2[i] != '\0'; i++){
-        if (s1[i] != s2[i]){
+    int i = 0;
+    while (*s1 != '\0' || *s2 != '\0'){
+        if (*s1++ != *s2++){
             return i;
         }
+        i++;
     }
     return -1;
 }
